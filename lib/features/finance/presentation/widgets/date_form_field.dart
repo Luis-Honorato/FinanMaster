@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/finance_form_field.dart';
+import 'package:gerenciamento_financeiro/features/finance/utils/colors/app_colors.dart';
 
 class DateFormField extends StatefulWidget {
   final String label;
@@ -33,15 +35,16 @@ class _DateFormFieldState extends State<DateFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return FinanceFormField(
       controller: widget.controller,
-      readOnly: true,
       validator: widget.validator,
-      decoration: InputDecoration(
-        labelText: widget.label,
-        suffixIcon: const Icon(Icons.calendar_today),
+      label: widget.label,
+      prefixIcon: const Icon(
+        Icons.calendar_today,
+        color: AppColors.grayDefault,
       ),
       onTap: () => _selectDate(context),
+      readOnly: true,
     );
   }
 }

@@ -1,63 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_financeiro/features/finance/domain/model/entry_category.dart';
+import 'package:gerenciamento_financeiro/features/finance/domain/model/entry_type_enum.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/notifiers/seleceted_entry_category_notifier.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/notifiers/selected_entry_type_notifier.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/entry_category_dropdown.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/entry_type_dropdown.dart';
 
 class EntryTypeButtons extends StatelessWidget {
-  const EntryTypeButtons({super.key});
+  final SelectedEntryTypeNotifier selectedEntryTypeNotifier;
+  final SelectedEntryCategoryNotifier selectedEntryCategoryNotifier;
+  const EntryTypeButtons({
+    super.key,
+    required this.selectedEntryTypeNotifier,
+    required this.selectedEntryCategoryNotifier,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        OutlinedButton(
-          onPressed: () {},
-          style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.blue.shade300,
-            side: BorderSide.none,
-          ),
-          child: const Row(
+    return ValueListenableBuilder<EntryType>(
+        valueListenable: selectedEntryTypeNotifier.entryType,
+        builder: (context, entryType, _) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Icon(
-                Icons.attach_money,
-                color: Colors.black,
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width / 2.25,
+                child: EntryTypeDropdown(
+                  value: entryType,
+                  onChanged: (type) {
+                    selectedEntryTypeNotifier.setEntryType(type);
+                    if (type == EntryType.income) {
+                      selectedEntryCategoryNotifier
+                          .setCategoryType(IncomeCategory.salary);
+                    } else {
+                      selectedEntryCategoryNotifier
+                          .setCategoryType(ExpenseCategory.food);
+                    }
+                  },
+                  validator: (type) {
+                    if (type == null) return 'Selecione o tipo';
+                    return null;
+                  },
+                ),
               ),
-              Text(
-                'Salário',
-                style: TextStyle(color: Colors.black),
+              ValueListenableBuilder<EntryCategory>(
+                valueListenable: selectedEntryCategoryNotifier.category,
+                builder: (context, category, _) {
+                  return SizedBox(
+                    width: MediaQuery.sizeOf(context).width / 2.25,
+                    child: EntryCategoryDropdown(
+                      entryType: entryType,
+                      selectedCategory: category,
+                      onChanged: (cat) =>
+                          selectedEntryCategoryNotifier.setCategoryType(cat),
+                      validator: (cat) =>
+                          cat == null ? 'Selecione a categoria' : null,
+                    ),
+                  );
+                },
               ),
-              SizedBox(width: 20),
-              Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.black,
-              )
             ],
-          ),
-        ),
-        OutlinedButton(
-          onPressed: () {},
-          style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.red.shade300,
-            side: BorderSide.none,
-          ),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/images/despesa.png',
-                width: 30,
-                height: 30,
-              ),
-              const Text(
-                'Despesa',
-                style: TextStyle(color: Colors.black),
-              ),
-              const SizedBox(width: 20),
-              const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.black,
-              )
-            ],
-          ),
-        )
-      ],
-    );
+          );
+        });
   }
 }

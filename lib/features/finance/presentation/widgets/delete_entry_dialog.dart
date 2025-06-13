@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/bloc/finance_bloc.dart';
 
 class DeleteEntryDialog extends StatelessWidget {
-  const DeleteEntryDialog({super.key});
+  final int entryId;
+  final FinanceBloc bloc;
+  const DeleteEntryDialog({
+    super.key,
+    required this.entryId,
+    required this.bloc,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,10 @@ class DeleteEntryDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    bloc.add(DeleteEntryEvent(id: entryId));
+                    Navigator.pop(context);
+                  },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.red.shade300,
                     minimumSize: const Size(135, 40),

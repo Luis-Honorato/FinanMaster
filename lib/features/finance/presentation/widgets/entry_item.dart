@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_financeiro/features/finance/presentation/bloc/finance_bloc.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/delete_entry_dialog.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/edit_entry_dialog.dart';
+import 'package:gerenciamento_financeiro/features/finance/utils/colors/app_colors.dart';
 
 class EntryItem extends StatelessWidget {
   final bool isCoust;
-  final String entryType;
+  final String entryCategory;
   final double entryValue;
-  final String comment;
+  final String? comment;
   final DateTime dateTime;
+  final int entryId;
+  final FinanceBloc bloc;
   const EntryItem({
     super.key,
     required this.isCoust,
-    required this.entryType,
+    required this.entryCategory,
     required this.entryValue,
-    required this.comment,
+    this.comment,
     required this.dateTime,
+    required this.entryId,
+    required this.bloc,
   });
 
   @override
@@ -27,7 +33,7 @@ class EntryItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${dateTime.day}/${dateTime.month}/${dateTime.year}',
+              '${dateTime.day}/${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}/${dateTime.year}',
               style: const TextStyle(
                 color: Colors.grey,
               ),
@@ -46,7 +52,7 @@ class EntryItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          entryType,
+                          entryCategory,
                           style: TextStyle(color: color),
                         ),
                         Text(
@@ -55,14 +61,18 @@ class EntryItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(width: 15),
-                    FittedBox(
-                      child: Text(
-                        comment,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                    if (comment != null) ...[
+                      const SizedBox(width: 15),
+                      FittedBox(
+                        child: Text(
+                          comment!,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.grayDefault,
+                          ),
+                        ),
                       ),
-                    ),
+                    ]
                   ],
                 ),
                 Row(
@@ -74,16 +84,25 @@ class EntryItem extends StatelessWidget {
                           builder: (ctx) => const EditEntrydialog(),
                         );
                       },
-                      icon: const Icon(Icons.edit),
+                      icon: const Icon(
+                        Icons.edit,
+                        color: AppColors.grayDefault,
+                      ),
                     ),
                     IconButton(
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => const DeleteEntryDialog(),
+                          builder: (ctx) => DeleteEntryDialog(
+                            entryId: entryId,
+                            bloc: bloc,
+                          ),
                         );
                       },
-                      icon: const Icon(Icons.delete),
+                      icon: const Icon(
+                        Icons.delete,
+                        color: AppColors.grayDefault,
+                      ),
                     ),
                   ],
                 )
