@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/bloc/finance_bloc.dart';
+import 'package:gerenciamento_financeiro/features/finance/utils/colors/app_colors.dart';
 
 class DeleteEntryDialog extends StatelessWidget {
   final int entryId;
@@ -35,7 +36,7 @@ class DeleteEntryDialog extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.red.shade300,
+                    backgroundColor: AppColors.bluePrimary,
                     minimumSize: const Size(135, 40),
                   ),
                   child: const Text(

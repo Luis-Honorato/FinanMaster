@@ -6,13 +6,15 @@ class DateFormField extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final FormFieldValidator<String>? validator;
+  final DateTime? initialValue;
 
   const DateFormField({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.validator,
-  }) : super(key: key);
+    this.initialValue,
+  });
 
   @override
   State<DateFormField> createState() => _DateFormFieldState();

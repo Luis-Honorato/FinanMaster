@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gerenciamento_financeiro/features/finance/data/database/app_database.dart';
-import 'package:gerenciamento_financeiro/features/finance/domain/model/entry_type_enum.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/bloc/finance_bloc.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/entry_item.dart';
 import 'package:gerenciamento_financeiro/features/finance/utils/colors/app_colors.dart';
@@ -98,13 +97,7 @@ class _EntrysScheduleState extends State<EntrysSchedule>
                           itemBuilder: (context, index) {
                             final currentEntry = entries[index];
                             return EntryItem(
-                              isCoust: currentEntry.entryType ==
-                                  EntryType.expense.name,
-                              entryCategory: currentEntry.entryCategory,
-                              entryValue: currentEntry.value,
-                              comment: currentEntry.description,
-                              dateTime: currentEntry.entryDate,
-                              entryId: currentEntry.id,
+                              entry: currentEntry,
                               bloc: _bloc,
                             );
                           });

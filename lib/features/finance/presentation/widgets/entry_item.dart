@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_financeiro/features/finance/data/database/app_database.dart';
+import 'package:gerenciamento_financeiro/features/finance/domain/model/entry_type_enum.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/bloc/finance_bloc.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/delete_entry_dialog.dart';
 import 'package:gerenciamento_financeiro/features/finance/presentation/widgets/edit_entry_dialog.dart';
 import 'package:gerenciamento_financeiro/features/finance/utils/colors/app_colors.dart';
 
 class EntryItem extends StatelessWidget {
-  final bool isCoust;
-  final String entryCategory;
-  final double entryValue;
-  final String? comment;
-  final DateTime dateTime;
-  final int entryId;
+  final Entry entry;
   final FinanceBloc bloc;
   const EntryItem({
     super.key,
-    required this.isCoust,
-    required this.entryCategory,
-    required this.entryValue,
-    this.comment,
-    required this.dateTime,
-    required this.entryId,
+    required this.entry,
     required this.bloc,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isCoust = entry.entryType == EntryType.expense.name;
     final color = isCoust ? Colors.red.shade300 : Colors.green.shade300;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -33,7 +26,7 @@ class EntryItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${dateTime.day}/${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}/${dateTime.year}',
+              '${entry.entryDate.day}/${entry.entryDate.month < 10 ? '0${entry.entryDate.month}' : entry.entryDate.month}/${entry.entryDate.year}',
               style: const TextStyle(
                 color: Colors.grey,
               ),
@@ -52,20 +45,20 @@ class EntryItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          entryCategory,
+                          entry.entryCategory,
                           style: TextStyle(color: color),
                         ),
                         Text(
-                          '${isCoust ? '-' : '+'} ${entryValue.toStringAsFixed(2).replaceAll('.', ',')}',
+                          '${isCoust ? '-' : '+'} ${entry.value.toStringAsFixed(2).replaceAll('.', ',')}',
                           style: TextStyle(color: color),
                         ),
                       ],
                     ),
-                    if (comment != null) ...[
+                    if (entry.description != null) ...[
                       const SizedBox(width: 15),
                       FittedBox(
                         child: Text(
-                          comment!,
+                          entry.description!,
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.grayDefault,
@@ -81,7 +74,10 @@ class EntryItem extends StatelessWidget {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => const EditEntrydialog(),
+                          builder: (ctx) => EditEntrydialog(
+                            entry: entry,
+                            bloc: bloc,
+                          ),
                         );
                       },
                       icon: const Icon(
@@ -94,7 +90,7 @@ class EntryItem extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (ctx) => DeleteEntryDialog(
-                            entryId: entryId,
+                            entryId: entry.id,
                             bloc: bloc,
                           ),
                         );

@@ -10,6 +10,7 @@ class FinanceFormField extends StatelessWidget {
   final Icon? prefixIcon;
   final TextInputType? keyboardType;
   final bool readOnly;
+  final String? initialValue;
 
   const FinanceFormField({
     super.key,
@@ -21,11 +22,13 @@ class FinanceFormField extends StatelessWidget {
     this.prefixIcon,
     this.keyboardType,
     this.readOnly = false,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       controller: controller,
       readOnly: readOnly,
       validator: validator,
